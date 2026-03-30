@@ -1,0 +1,7 @@
+### --- FINAMGMT - INFRA & SECRETS --- ###
+
+# Database (Local Data)
+[Ff]inamgmt_pgdata/
+
+# Environment / Credentials
+.env
