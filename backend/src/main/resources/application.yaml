@@ -3,7 +3,7 @@ spring:
     name: financial-management
 
   datasource:
-    url: jdbc:postgresql://localhost:${FINMGMT_POSTGRES_PORT:5432}/${FINMGMT_POSTGRES_DB:finamgmt}
+    url: jdbc:postgresql://${FINMGMT_POSTGRES_HOST:localhost}:${FINMGMT_POSTGRES_PORT:5432}/${FINMGMT_POSTGRES_DB:finamgmt}
     username: ${FINMGMT_POSTGRES_USER:finamgmt}
     password: ${FINMGMT_POSTGRES_PASSWORD:finamgmt}
   jpa:
