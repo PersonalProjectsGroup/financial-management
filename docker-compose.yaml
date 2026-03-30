@@ -1,0 +1,25 @@
+x-postgres-env: &postgres-env
+  POSTGRES_DB: ${FINMGMT_POSTGRES_DB:finamgmt}
+  POSTGRES_USER: ${FINMGMT_POSTGRES_USER:finamgmt}
+  POSTGRES_PASSWORD: ${FINMGMT_POSTGRES_PASSWORD:finamgmt}
+  TZ: ${TIMEZONE:America/Sao_Paulo}
+  PGTZ: ${TIMEZONE:America/Sao_Paulo}
+
+services:
+  postgres:
+    image: postgres:18.3-alpine
+    container_name: finamgmt_postgres
+    environment: *postgres-env
+    ports:
+      - "${FINMGMT_POSTGRES_PORT:5432}:5432"
+    volumes:
+      - finamgmt_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  finamgmt_pgdata:
+    driver: local
