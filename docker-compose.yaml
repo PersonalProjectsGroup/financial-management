@@ -1,9 +1,9 @@
 x-postgres-env: &postgres-env
-  POSTGRES_DB: ${FINMGMT_POSTGRES_DB:finamgmt}
-  POSTGRES_USER: ${FINMGMT_POSTGRES_USER:finamgmt}
-  POSTGRES_PASSWORD: ${FINMGMT_POSTGRES_PASSWORD:finamgmt}
-  TZ: ${TIMEZONE:America/Sao_Paulo}
-  PGTZ: ${TIMEZONE:America/Sao_Paulo}
+  POSTGRES_DB: ${FINMGMT_POSTGRES_DB:-finamgmt}
+  POSTGRES_USER: ${FINMGMT_POSTGRES_USER:-finamgmt}
+  POSTGRES_PASSWORD: ${FINMGMT_POSTGRES_PASSWORD:-finamgmt}
+  TZ: ${TIMEZONE:-America/Sao_Paulo}
+  PGTZ: ${TIMEZONE:-America/Sao_Paulo}
 
 services:
   postgres:
@@ -11,7 +11,7 @@ services:
     container_name: finamgmt_postgres
     environment: *postgres-env
     ports:
-      - "${FINMGMT_POSTGRES_PORT:5432}:5432"
+      - "${FINMGMT_POSTGRES_PORT:-5432}:5432"
     volumes:
       - finamgmt_pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -19,6 +19,20 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: finamgmt_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@admin.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    ports:
+      - "8081:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: always
 
 volumes:
   finamgmt_pgdata:
